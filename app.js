@@ -22,7 +22,10 @@ const pool = mysql.createPool({
 // Routes
 app.post('/api/users', createUser);
 app.get('/api/users', getAllUsers);
+
 app.post('/api/users/login', login);
+
+app.post('/api/profiles', createProfile);
 
 // Functions
 async function createUser(req, res) {
@@ -42,6 +45,13 @@ async function login(req, res) {
     let params = [user.email];
     const result = await pool.query("SELECT name, email, password FROM users WHERE email = ?", params);
     res.status(201).json(result[0]);
+}
+
+async function createProfile(req, res) {
+    const user = req.body;
+    let params = [user.id, 'edit to add company'];
+    const result = await pool.query("INSERT INTO profiles (user_id, company) VALUES (?,?)", params);
+    res.status(201).json({ id: result[0].insertId });
 }
 
 app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
