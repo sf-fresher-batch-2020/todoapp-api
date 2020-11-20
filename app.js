@@ -47,6 +47,7 @@ async function getAllUsers(req, res) {
 async function login(req, res) {
     const user = req.body;
     let params = [user.email];
+    console.log(params);
     const result = await pool.query("SELECT name, email, password FROM users WHERE email = ?", params);
     res.status(201).json(result[0]);
 }
@@ -67,7 +68,7 @@ async function getProfile(req, res) {
 
 async function createTask(req, res) {
     const task = req.body;
-    let params = [task.description, task.createdBy, task.priority, task.status];
+    let params = [task.task, task.createdBy, task.priority, task.status];
     const result = await pool.query("INSERT INTO tasks (description, created_by, priority, status) VALUES (?,?,?,?)", params);
     res.status(201).json({ id: result[0].insertId });
 }
