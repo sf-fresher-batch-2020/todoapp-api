@@ -1,0 +1,25 @@
+{
+  "name": "todoapp-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm install && node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.0.0-alpha.8",
+    "joi": "^17.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "engines": {
+    "node": "15.x"
+  }
+}
