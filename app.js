@@ -22,20 +22,27 @@ const pool = mysql.createPool({
 // Routes
 app.post('/api/users', createUser);
 app.get('/api/users', getAllUsers);
+app.post('/api/users/login', login);
 
 // Functions
 async function createUser(req, res) {
     let user = req.body;
     let params = [user.name, user.email, user.password];
-    const result = await pool.query("insert into users (name,email,password) values (?,?,?)", params);
+    const result = await pool.query("INSERT INTO users (name,email,password) VALUES (?,?,?)", params);
     res.status(201).json({ id: result[0].insertId });
 }
 
 async function getAllUsers(req, res) {
-    const result = await pool.query("select * from users");
+    const result = await pool.query("SELECT * FROM users");
     res.status(200).json(result[0]);
 }
 
+async function login(req, res) {
+    const user = req.body;
+    let params = [user.email];
+    const result = await pool.query("SELECT name, email, password FROM users WHERE email = ?", params);
+    res.status(201).json(result[0]);
+}
 
 app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
 
