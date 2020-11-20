@@ -19,6 +19,17 @@ const pool = mysql.createPool({
     connectionLimit: 1
 });
 
+// Routes
+app.post('/api/users', createUser);
+
+// Functions
+async function createUser(req, res) {
+    let user = req.body;
+    let params = [user.name, user.email, user.password];
+    const result = await pool.query("insert into users (name,email,password) values (?,?,?)", params);
+    res.status(201).json({ id: result[0].insertId });
+}
+
 app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
 
 app.listen(port, () => console.log(`Example app listening on port!`, port));
