@@ -82,7 +82,7 @@ async function getTasks(req, res) {
 
 async function updateTask(req, res) {
     const task = req.body;
-    let params = [task.description, task.priority, task.status, task.id];
+    let params = [task.task, task.priority, task.status, task.id];
     const result = await pool.query("UPDATE tasks SET description = ?, priority = ?, status = ? WHERE id = ?", params);
     res.status(201).json(result[0].info);
 }
