@@ -26,6 +26,7 @@ app.get('/api/users', getAllUsers);
 app.post('/api/users/login', login);
 
 app.post('/api/profiles', createProfile);
+app.get('/api/profiles', getProfile);
 
 // Functions
 async function createUser(req, res) {
@@ -52,6 +53,13 @@ async function createProfile(req, res) {
     let params = [user.id, 'edit to add company'];
     const result = await pool.query("INSERT INTO profiles (user_id, company) VALUES (?,?)", params);
     res.status(201).json({ id: result[0].insertId });
+}
+
+async function getProfile(req, res) {
+    const user = req.body;
+    let params = [user.id];
+    const result = await pool.query("SELECT * FROM profiles where user_id = ?", params);
+    res.status(200).json(result[0]);
 }
 
 app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
