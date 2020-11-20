@@ -48,7 +48,7 @@ async function login(req, res) {
     const user = req.body;
     let params = [user.email];
     console.log(params);
-    const result = await pool.query("SELECT name, email, password FROM users WHERE email = ?", params);
+    const result = await pool.query("SELECT id, name, email, password FROM users WHERE email = ?", params);
     res.status(201).json(result[0]);
 }
 
