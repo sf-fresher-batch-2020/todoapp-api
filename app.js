@@ -53,7 +53,7 @@ async function login(req, res) {
 
 async function createProfile(req, res) {
     const user = req.body;
-    let params = [user.id, 'edit to add company'];
+    let params = [user.userId, params.company];
     const result = await pool.query("INSERT INTO profiles (user_id, company) VALUES (?,?)", params);
     res.status(201).json({ id: result[0].insertId });
 }
