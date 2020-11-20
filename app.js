@@ -18,7 +18,7 @@ const pool = mysql.createPool({
     database: process.env.DB_NAME || "training_db",
     connectionLimit: 1
 });
-
+*/
 app.get("/", (req,res)=> res.send({message:"REST API Service is working"}))
 
 app.listen(port, () => console.log(`Example app listening on port!`, port ))
