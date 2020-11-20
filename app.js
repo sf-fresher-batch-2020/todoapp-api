@@ -20,14 +20,17 @@ const pool = mysql.createPool({
 });
 
 // Routes
+//users
 app.post('/api/users', createUser);
 app.get('/api/users', getAllUsers);
-
 app.post('/api/users/login', login);
-
+// profiles
 app.post('/api/profiles', createProfile);
 app.get('/api/profiles', getProfile);
-
+//tasks
+app.post('/api/tasks', createTask);
+app.get('/api/tasks', getTasks);
+app.post('/api/tasks/update', updateTask);
 // Functions
 async function createUser(req, res) {
     let user = req.body;
@@ -60,6 +63,27 @@ async function getProfile(req, res) {
     let params = [user.id];
     const result = await pool.query("SELECT * FROM profiles where user_id = ?", params);
     res.status(200).json(result[0]);
+}
+
+async function createTask(req, res) {
+    const task = req.body;
+    let params = [task.description, task.createdBy, task.priority, task.status];
+    const result = await pool.query("INSERT INTO tasks (description, created_by, priority, status) VALUES (?,?,?,?)", params);
+    res.status(201).json({ id: result[0].insertId });
+}
+
+async function getTasks(req, res) {
+    const user = req.body;
+    let params = [user.id];
+    const result = await pool.query("SELECT * FROM tasks WHERE created_by = ?", params);
+    res.status(200).json(result[0]);
+}
+
+async function updateTask(req, res) {
+    const task = req.body;
+    let params = [task.description, task.priority, task.status, task.id];
+    const result = await pool.query("UPDATE tasks SET description = ?, priority = ?, status = ? WHERE id = ?", params);
+    res.status(201).json(result[0].info);
 }
 
 app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
