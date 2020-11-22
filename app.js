@@ -27,6 +27,7 @@ app.post('/api/users/login', login);
 // profiles
 app.post('/api/profiles', createProfile);
 app.post('/api/profiles/myProfile', getProfile);
+app.post('/api/profiles/update', updateProfile);
 //tasks
 app.post('/api/tasks', createTask);
 app.post('/api/tasks/all', getTasks);
@@ -65,6 +66,13 @@ async function getProfile(req, res) {
     let params = [user.id];
     const result = await pool.query("SELECT * FROM profiles where user_id = ?", params);
     res.status(200).json(result[0]);
+}
+
+async function updateProfile(req, res) {
+    const profile = req.body;
+    let params = [profile.company, profile.profileId];
+    const result = await pool.query("UPDATE profiles SER company = ? WHERE id = ?", params);
+    res.status(201).json(result[0].info);
 }
 
 async function createTask(req, res) {
