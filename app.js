@@ -93,6 +93,7 @@ async function deleteTask(req, res) {
     const task = req.body;
     let params = [task.id];
     const result = await pool.query("DELETE FROM tasks WHERE id = ?", params);
+    res.status(201).json(result[0].info);
 }
 
 app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
