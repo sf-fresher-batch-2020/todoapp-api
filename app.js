@@ -29,7 +29,7 @@ app.post('/api/profiles', createProfile);
 app.get('/api/profiles', getProfile);
 //tasks
 app.post('/api/tasks', createTask);
-app.get('/api/tasks', getTasks);
+app.post('/api/tasks/all', getTasks);
 app.post('/api/tasks/update', updateTask);
 // Functions
 async function createUser(req, res) {
