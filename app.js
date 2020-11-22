@@ -31,6 +31,7 @@ app.get('/api/profiles', getProfile);
 app.post('/api/tasks', createTask);
 app.post('/api/tasks/all', getTasks);
 app.post('/api/tasks/update', updateTask);
+app.post('/api/tasks/delete', deleteTask);
 // Functions
 async function createUser(req, res) {
     let user = req.body;
@@ -86,6 +87,12 @@ async function updateTask(req, res) {
     let params = [task.task, task.priority, task.status, task.id];
     const result = await pool.query("UPDATE tasks SET description = ?, priority = ?, status = ? WHERE id = ?", params);
     res.status(201).json(result[0].info);
+}
+
+async function deleteTask(req, res) {
+    const task = req.body;
+    let params = [task.id];
+    const result = await pool.query("DELETE FROM tasks WHERE id = ?", params);
 }
 
 app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
