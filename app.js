@@ -26,7 +26,7 @@ app.get('/api/users', getAllUsers);
 app.post('/api/users/login', login);
 // profiles
 app.post('/api/profiles', createProfile);
-app.post('/api/profiles', getProfile);
+app.post('/api/profiles/myProfile', getProfile);
 //tasks
 app.post('/api/tasks', createTask);
 app.post('/api/tasks/all', getTasks);
