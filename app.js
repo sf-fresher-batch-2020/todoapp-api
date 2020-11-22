@@ -71,7 +71,7 @@ async function getProfile(req, res) {
 async function updateProfile(req, res) {
     const profile = req.body;
     let params = [profile.company, profile.profileId];
-    const result = await pool.query("UPDATE profiles SER company = ? WHERE id = ?", params);
+    const result = await pool.query("UPDATE profiles SET company = ? WHERE id = ?", params);
     res.status(201).json(result[0].info);
 }
 
