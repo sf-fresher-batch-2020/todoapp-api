@@ -78,7 +78,7 @@ async function getTasks(req, res) {
     const user = req.body;
     console.log("myuser", user);
     let params = [user.id];
-    res.send({ message: req, user, params });
+    res.send({ request: req, user: user, params: params });
     // const result = await pool.query("SELECT * FROM tasks WHERE created_by = ?", params);
     // res.status(200).json(result[0]);
 }
