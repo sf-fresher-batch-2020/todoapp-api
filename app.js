@@ -48,9 +48,11 @@ async function getAllUsers(req, res) {
 
 async function login(req, res) {
     const user = req.body;
-    let params = [user.email];
-    console.log(params);
-    const result = await pool.query("SELECT id, name, email, password FROM users WHERE email = ?", params);
+    let params = [user.email, user.password];
+    const result = await pool.query("SELECT id, name, email FROM users WHERE email = ? AND password = ?", params);
+    if (result[0].length == 0) {
+        throw new Error("Invalid Login Credentials");
+    }
     res.status(201).json(result[0]);
 }
 
@@ -104,6 +106,6 @@ async function deleteTask(req, res) {
     res.status(201).json(result[0].info);
 }
 
-app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
+// app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
 
 app.listen(port, () => console.log(`Example app listening on port!`, port));
