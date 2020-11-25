@@ -1,11 +1,9 @@
-const express = require('express')
-const jwt = require('jsonwebtoken')
+const express = require('express');
 const cors = require('cors');
-const TOKEN_SECRET = "7bc78545b1a3923cc1e1e19523fd5c3f20b409509";
-const app = express()
-app.use(cors())
-app.use(express.json())
-const port = process.env.PORT || 5000
+const app = express();
+app.use(cors());
+app.use(express.json());
+const port = process.env.PORT || 5000;
 
 
 const mysql = require("mysql2/promise");
