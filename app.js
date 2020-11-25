@@ -24,11 +24,11 @@ app.get('/api/users', getAllUsers);
 app.post('/api/users/login', login);
 // profiles
 app.post('/api/profiles', createProfile);
-app.post('/api/profiles/myProfile', getProfile);
+app.get('/api/profiles/:id', getProfile);
 app.post('/api/profiles/update', updateProfile);
 //tasks
 app.post('/api/tasks', createTask);
-app.post('/api/tasks/all', getTasks);
+app.get('/api/tasks/:id', getTasks);
 app.post('/api/tasks/update', updateTask);
 app.post('/api/tasks/delete', deleteTask);
 // Functions
@@ -62,9 +62,8 @@ async function createProfile(req, res) {
 }
 
 async function getProfile(req, res) {
-    const user = req.body;
-    let params = [user.id];
-    const result = await pool.query("SELECT * FROM profiles where user_id = ?", params);
+    const id = req.params.id;
+    const result = await pool.query("SELECT * FROM profiles where user_id = ?", id);
     res.status(200).json(result[0]);
 }
 
@@ -83,10 +82,8 @@ async function createTask(req, res) {
 }
 
 async function getTasks(req, res) {
-    const user = req.body;
-    let params = [user.uid];
-    // res.send({ message: user });
-    const result = await pool.query("SELECT * FROM tasks WHERE created_by = ?", params);
+    const uid = req.params.id;
+    const result = await pool.query("SELECT * FROM tasks WHERE created_by = ?", uid);
     res.status(200).json(result[0]);
 }
 
