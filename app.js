@@ -4,9 +4,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 5000;
-
+const { JwtUtil } = require("./util/jwt.util");
 
 const mysql = require("mysql2/promise");
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.MAIL_ID || "yatranubhav.feedback@gmail.com",
+        pass: process.env.MAIL_PASS || "Yatranubhav@123"
+    }
+});
 
 const pool = mysql.createPool({
     host: process.env.DB_URL || "localhost",
@@ -36,6 +45,21 @@ async function createUser(req, res) {
     let user = req.body;
     let params = [user.name, user.email, user.password];
     const result = await pool.query("INSERT INTO users (name,email,password) VALUES (?,?,?)", params);
+    if (result[0].length > 0) {
+        var mailOptions = {
+            from: 'yatranubhav.feedback@gmail.com',
+            to: result[0].email,
+            subject: 'Reg - ToDo App Signup',
+            text: 'Thanks for Signing Up with our ToDo app...!'
+        };
+        transporter.sendMail(mailOptions, function(err, info) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('email sent');
+            }
+        });
+    }
     res.status(201).json({ id: result[0].insertId });
 }
 
@@ -100,7 +124,5 @@ async function deleteTask(req, res) {
     const result = await pool.query("DELETE FROM tasks WHERE id = ?", params);
     res.status(201).json(result[0].info);
 }
-
-// app.get("/", (req, res) => res.send({ message: "REST API Service is working" }));
 
 app.listen(port, () => console.log(`Example app listening on port!`, port));
