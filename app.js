@@ -30,6 +30,8 @@ const pool = mysql.createPool({
 //users
 app.post('/api/users', createUser);
 app.get('/api/users', getAllUsers);
+app.post('/api/users/mail', sendM);
+app.get('/api/users/:id', getUser);
 app.post('/api/users/login', login);
 // profiles
 app.post('/api/profiles', createProfile);
@@ -45,25 +47,39 @@ async function createUser(req, res) {
     let user = req.body;
     let params = [user.name, user.email, user.password];
     const result = await pool.query("INSERT INTO users (name,email,password) VALUES (?,?,?)", params);
-    if (result[0].length > 0) {
-        var mailOptions = {
-            from: 'yatranubhav.feedback@gmail.com',
-            to: result[0].email,
-            subject: 'Reg - ToDo App Signup',
-            text: 'Thanks for Signing Up with our ToDo app...!'
-        };
-        transporter.sendMail(mailOptions, function(err, info) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('email sent');
-            }
-        });
-    }
     res.status(201).json({ id: result[0].insertId });
 }
 
+async function getUser(req, res) {
+    let id = req.params.id;
+    const result = await pool.query("SELECT * FROM users WHERE id = ?", id);
+    res.status(200).json(result[0]);
+}
+
+async function sendM(req, res) {
+    console.log('mailing!');
+    let email = req.body.email;
+    // console.log(req);
+    var mailOptions = {
+        from: 'ToDo App',
+        to: email,
+        subject: 'Reg - ToDo App Signup',
+        text: 'Thanks for Signing Up with our ToDo app...!'
+    };
+    let result;
+    transporter.sendMail(mailOptions, function(err, info) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('email sent');
+            result = info;
+        }
+    });
+    res.status(201).json(result);
+}
+
 async function getAllUsers(req, res) {
+    console.log('get users');
     const result = await pool.query("SELECT * FROM users");
     res.status(200).json(result[0]);
 }
