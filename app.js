@@ -1,7 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const TOKEN_SECRET = "7bc78545b1a3923cc1e1e19523fd5c3f20b409509";
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -27,43 +25,22 @@ const pool = mysql.createPool({
     connectionLimit: 1
 });
 
-// JWT Authenticate Token
-class JwtUtil {
-    static authenticateToken(req, res, next) {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        if (token == null) return res.sendStatus(401);
-        jwt.verify(token, TOKEN_SECRET, (err, user) => {
-            console.log(err);
-            if (err) return res.sendStatus(403);
-            req.user = user;
-            next();
-        })
-    }
-
-}
-
-// genetares toten with timeout
-function generateAccessToken(username) {
-    return jwt.sign({ data: username }, TOKEN_SECRET, { expiresIn: 60 * 60 });
-}
-
 // Routes
 //users
 app.post('/api/users', createUser);
-app.get('/api/users', JwtUtil.authenticateToken, getAllUsers);
+app.get('/api/users', getAllUsers);
 app.post('/api/users/mail', sendM);
 app.get('/api/users/:id', getUser);
 app.post('/api/users/login', login);
 // profiles
-app.post('/api/profiles', JwtUtil.authenticateToken, createProfile);
-app.get('/api/profiles/:id', JwtUtil.authenticateToken, getProfile);
-app.post('/api/profiles/update', JwtUtil.authenticateToken, updateProfile);
+app.post('/api/profiles', createProfile);
+app.get('/api/profiles/:id', getProfile);
+app.post('/api/profiles/update', updateProfile);
 //tasks
-app.post('/api/tasks', JwtUtil.authenticateToken, createTask);
-app.get('/api/tasks/:id', JwtUtil.authenticateToken, getTasks);
-app.post('/api/tasks/update', JwtUtil.authenticateToken, updateTask);
-app.post('/api/tasks/delete', JwtUtil.authenticateToken, deleteTask);
+app.post('/api/tasks', createTask);
+app.get('/api/tasks/:id', getTasks);
+app.post('/api/tasks/update', updateTask);
+app.post('/api/tasks/delete', deleteTask);
 // Functions
 async function createUser(req, res) {
     let user = req.body;
@@ -113,10 +90,7 @@ async function login(req, res) {
     if (result[0].length == 0) {
         throw new Error("Invalid Login Credentials");
     }
-    let resUser = result[0];
-    let token = generateAccessToken(resUser);
-    resUser['token'] = token;
-    res.status(201).json(resUser);
+    res.status(201).json(result[0]);
 }
 
 async function createProfile(req, res) {
