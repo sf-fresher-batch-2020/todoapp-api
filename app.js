@@ -11,8 +11,8 @@ var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.MAIL_ID || "yatranubhav.feedback@gmail.com",
-        pass: process.env.MAIL_PASS || "Yatranubhav@123"
+        user: process.env.MAIL_ID,
+        pass: process.env.MAIL_PASS
     }
 });
 
